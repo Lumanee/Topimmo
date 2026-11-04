@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atelier Immo Pro, version 2</title>
+<meta name="theme-color" content="#1f4fd8">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Immo Pro">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand"><img src="icon.svg" alt="" width="28" height="28"><span>Atelier Immo Pro<span class="badge-v2">V2</span></span></div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <label class="small" for="userSel">Connecté en tant que</label>
+      <select id="userSel"></select>
+      <div class="small muted" id="roleInfo"></div>
+      <button class="btn primary" id="installBtn" hidden>Installer l'application</button>
+      <button class="btn ghost" id="logoutBtn">Se déconnecter</button>
+      <button class="btn ghost" id="offBtn">Simuler une perte de réseau</button>
+      <button class="btn ghost" id="resetBtn">Réinitialiser la démo</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1 id="title"></h1>
+      <input id="search" type="search" placeholder="Rechercher un bien, un contact, une ville…" aria-label="Recherche">
+      <button class="btn hide-m" id="layBtn" title="Changer la disposition de l'écran">Disposition</button>
+      <button class="btn primary" id="addBtn">+ Nouveau bien</button>
+    </header>
+    <div class="banner" id="banner" hidden></div>
+    <p class="lead" id="lead"></p>
+    <section id="view" class="view"></section>
+  </main>
+</div>
+<nav class="bottom" id="bottom"></nav>
+<div id="drawer" class="drawer" hidden></div>
+<div id="auth" class="auth"></div>
+<div id="toast" class="toast" hidden></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
