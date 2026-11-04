@@ -759,6 +759,29 @@ document.addEventListener('click', e => {
 $('#logoutBtn').addEventListener('click', () => { authCtx = {}; showAuth('login'); });
 showAuth('login');
 render();
+// Numéros de mandat cliquables partout : chaque « M-2026-0101 » affiché ouvre la fiche du bien correspondant.
+const MANDAT_RE = /M-\d{4}-\d{4}/g, SKIP_TAGS = new Set(['TEXTAREA', 'SELECT', 'OPTION', 'SCRIPT', 'STYLE', 'PRE', 'INPUT']);
+function linkMandats(root) {
+  if (!root) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => {
+    if (!n.nodeValue.includes('M-')) return NodeFilter.FILTER_REJECT;
+    for (let p = n.parentElement; p && p !== root.parentElement; p = p.parentElement) if (SKIP_TAGS.has(p.tagName) || p.classList.contains('mlink')) return NodeFilter.FILTER_REJECT;
+    MANDAT_RE.lastIndex = 0; return MANDAT_RE.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; } });
+  const nodes = []; while (w.nextNode()) nodes.push(w.currentNode);
+  nodes.forEach(n => {
+    const frag = document.createDocumentFragment(); let last = 0, found = false; const txt = n.nodeValue; MANDAT_RE.lastIndex = 0; let m;
+    while ((m = MANDAT_RE.exec(txt))) {
+      const b = db.biens.find(x => x.mandatNum === m[0]); if (!b) continue; found = true;
+      frag.append(txt.slice(last, m.index));
+      const a = document.createElement('span'); a.className = 'mlink'; a.dataset.open = b.id; a.tabIndex = 0; a.setAttribute('role', 'link'); a.title = 'Ouvrir la fiche du mandat'; a.textContent = m[0]; frag.append(a); last = m.index + m[0].length;
+    }
+    if (found) { frag.append(txt.slice(last)); n.replaceWith(frag); }
+  });
+}
+{ const run = () => { obs.disconnect(); linkMandats($('#view')); linkMandats($('#drawer')); watch(); };
+  const obs = new MutationObserver(run), watch = () => ['#view', '#drawer'].forEach(q => obs.observe($(q), { childList: true, subtree: true, characterData: true }));
+  watch(); run(); }
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('mlink')) { e.preventDefault(); e.target.click(); } });
 // Bouton « Installer l'application » : Chrome/Edge/Android proposent l'installation, iPhone/iPad/Safari demandent un geste manuel.
 let installEvt = null;
 const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;

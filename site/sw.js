@@ -1,4 +1,4 @@
-const CACHE = 'immo-pro-v5';
+const CACHE = 'immo-pro-v6';
 const FILES = ['./', 'index.html', 'style.css', 'data.js', 'app.js', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png', 'manifest.webmanifest'];
 
 self.addEventListener('install', e => {
